@@ -2,24 +2,32 @@ import pyxel
 from guilib import GuiLib
 class Game:
     def __init__(self) -> None:
-        pyxel.init(128,160)
+        pyxel.init(128,160,fps=60)
         pyxel.mouse(True)
-        pyxel.load('./ressources.pyres')
+        pyxel.load('./ressources.pyxres')
         self.__whereiam = 'home'
-        self.__btn: list[GuiLib.Btn] = [GuiLib.Btn(2,50,50,9,'Coucou',12,6,7),GuiLib.Btn(2,70,50,11,'Coucou2',12,6,7)]
+        self.__btn: list[GuiLib.Btn] = [
+            GuiLib.Btn(3,116,60,20,'Attaquer',7),
+            GuiLib.Btn(65,116,60,20,'Attaquer',7),
+            GuiLib.Btn(3,138,60,20,'Attaquer',7),
+            GuiLib.Btn(65,138,60,20,'Attaquer',7),
+            GuiLib.AtkBtn(3,70,60,20,'Morsure',7,(3,10),'Normal',7)
+        ]
         
         
         pyxel.run(self.update,self.draw)
         pass
     def update(self) -> None:
+        for btn in self.__btn:
+            btn.update()
         pass
     def draw(self) -> None:
         pyxel.cls(0)
         pyxel.rect(0,1,26*4,6,5)
         pyxel.text(0,1,'abcdefghijklmnopqrstuvwxyz',10)
         pyxel.text(0,10,'ABCDEFGHIJKLMNOPQRSTUVWXYZ',10)
-        self.__btn[0].draw()
-        self.__btn[1].draw()
+        for btn in self.__btn:
+            btn.draw()
         match self.__whereiam:
             case 'home':
                 pass

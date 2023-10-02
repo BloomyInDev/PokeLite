@@ -5,10 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Python: Main file",
             "type": "python",
             "request": "launch",
             "program": "main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: \"Gui\" file",
+            "type": "python",
+            "request": "launch",
+            "program": "gui.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
