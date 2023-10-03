@@ -1,5 +1,30 @@
+from pokemon import Pokemon_basics
+from typing import Literal
 import pyxel
+class GuiCfg:
+    class Pokemon:
+        positions: dict[str, list[tuple[int,int,int]]] = {
+            "salameche":[(0,0,0)],
+            "bulbizare":[(32,0,0)],
+            "carapuce":[(16,0,11)],
+            "pikachu":[(48,0,7)],
+            "magicarpe":[(64,0,0)],
+            "chrysapile":[(80,0,0),(96,0,0)],
+            "rattatac":[(112,0,0)],
+            "ectoplasma":[(0,16,0)]
+        }
+        types = Literal["salameche","bulbizare","carapuce","pikachu","magicarpe","chrysapile","rattatac","ectoplasma"]
 class GuiLib:
+    class Pokemon:
+        def __init__(self,x:int,y:int,pokemon:GuiCfg.Pokemon.types) -> None:
+            assert(isinstance(x,int) and isinstance(y,int))
+            assert(pokemon in list(GuiCfg.Pokemon.positions.keys()))
+            self.__x, self.__y = x, y
+            self.__zone = GuiCfg.Pokemon.positions[pokemon][0]
+            pass
+        def draw(self):
+            pyxel.blt(self.__x,self.__y,0,self.__zone[0],self.__zone[1],16,16,self.__zone[2])
+            pass
     class Btn:
         def __init__(self,x:int,y:int,w:int,h:int,text:str,col:int) -> None:
             assert(isinstance(x,int) & isinstance(y,int) & isinstance(w,int) & isinstance(h,int))
@@ -66,7 +91,6 @@ class GuiLib:
             # Atk name
             pyxel.text(self.get_x()+2,self.get_y()+2,self.get_text(),self.get_col())
             # Atk uses
-            print(self.__uses_nb[0])
             uses_col = 8 if self.__uses_nb[0]<=2 else 7
             pyxel.text(self.get_x()+2,self.get_y()+self.get_h()-8,f'Uses:{self.__uses_nb[0]}/{self.__uses_nb[1]}',uses_col)
-            pyxel.text(self.get_x()+2,self.get_y()+2,self.get_text(),self.get_col())
+            #pyxel.text(self.get_x()+2,self.get_y()+2,self.get_text(),self.get_col())

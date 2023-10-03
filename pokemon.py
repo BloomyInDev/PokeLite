@@ -2,8 +2,8 @@ from random import randint
 from typing import Literal
 
 class Pokemon_basics:
-    types = ['normal','fire','water','grass','electric','rock']
-    types_type_def = Literal['normal','fire','water','grass','electric','rock']
+    types = ['normal','fire','water','grass','electric','rock','ghost']
+    types_type_def = Literal['normal','fire','water','grass','electric','rock','ghost']
     type_bonus_malus: dict[str, dict[str, types_type_def|None] | dict[str, str]] = {
         'normal':{'bonus':None,'malus':None},
         'fire':{'bonus':'grass','malus':'water'},
@@ -42,10 +42,11 @@ class Pokemon:
         return self.__name
     
 class Pokemon_Attack:
-    def __init__(self,name:str,damage:tuple[int,int],uses:tuple[int,int],shock_itself:tuple[bool,tuple[int,int]|None]) -> None:
+    def __init__(self,name:str,damage:tuple[int,int],uses:tuple[int,int],priority:int,shock_itself:tuple[bool,tuple[int,int]|None]) -> None:
         assert(isinstance(name,str))
-        assert(isinstance(damage,tuple) & len(damage)==2)
-        assert(isinstance(uses,tuple) & len(uses)==2)
+        assert(isinstance(damage,tuple) and len(damage) == 2)
+        assert(isinstance(uses,tuple) and len(uses)==2)
+        assert(isinstance(priority,int) and priority in range(0,100))
         assert(isinstance(shock_itself,tuple))
         self.__shock_itself: dict[str, bool|tuple[int,int]] = {"enabled":shock_itself[0]}
         if shock_itself[0]==True:

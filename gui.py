@@ -11,7 +11,11 @@ class Game:
             GuiLib.Btn(65,116,60,20,'Attaquer',7),
             GuiLib.Btn(3,138,60,20,'Attaquer',7),
             GuiLib.Btn(65,138,60,20,'Attaquer',7),
-            GuiLib.AtkBtn(3,70,60,20,'Morsure',7,(3,10),'Normal',7)
+            GuiLib.AtkBtn(3,90,60,20,'Morsure',7,(3,10),'Normal',7)
+        ]
+        self.__poke: list[GuiLib.Pokemon] = [
+            GuiLib.Pokemon(3,70,'carapuce'),
+            GuiLib.Pokemon(33,70,'bulbizare')
         ]
         
         
@@ -28,6 +32,8 @@ class Game:
         pyxel.text(0,10,'ABCDEFGHIJKLMNOPQRSTUVWXYZ',10)
         for btn in self.__btn:
             btn.draw()
+        for poke in self.__poke:
+            poke.draw()
         match self.__whereiam:
             case 'home':
                 pass
