@@ -52,8 +52,11 @@ class Pokemon:
         return self.__life
     def set_life(self,life:int):
         assert(isinstance(life,int))
-        self.__life = life
-        
+        self.__life = 0 if life<=0 else life
+    
+    def get_type(self):
+        return self.__poke.get_type()
+    
     def get_name(self):
         return self.__name
     
@@ -63,7 +66,7 @@ class Pokemon_Attack:
         assert(typeatk in Pokemon_basics.types)
         assert(isinstance(damage,tuple) and len(damage) == 2)
         assert(isinstance(uses,tuple) and len(uses)==2)
-        assert(isinstance(priority,int) and priority in range(0,100))
+        assert(isinstance(priority,int) and priority in range(0,101))
         assert(isinstance(shock_itself,tuple))
         self.__shock_itself: dict[str, bool|tuple[int,int]] = {"enabled":shock_itself[0]}
         if shock_itself[0]==True:
@@ -79,4 +82,8 @@ class Pokemon_Attack:
         pass
     def attack(self,pokemon_attacked:Pokemon,):
         self.__uses -= 1
+        #if pokemon_attacked.get_type()
+        damage = randint(self.__damage[0],self.__damage[1])
+        new_life = pokemon_attacked.get_life()-damage
+        pokemon_attacked.set_life(new_life)
         return
