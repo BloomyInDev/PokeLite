@@ -1,7 +1,6 @@
-from pokemon import Pokemon_basics
 from typing import Literal
 import pyxel
-class GuiCfg:
+class GuiVar:
     class Pokemon:
         positions: dict[str, list[tuple[int,int,int]]] = {
             "salameche":[(0,0,0)],
@@ -16,11 +15,11 @@ class GuiCfg:
         types = Literal["salameche","bulbizare","carapuce","pikachu","magicarpe","chrysapile","rattatac","ectoplasma"]
 class GuiLib:
     class Pokemon:
-        def __init__(self,x:int,y:int,pokemon:GuiCfg.Pokemon.types) -> None:
+        def __init__(self,x:int,y:int,pokemon:GuiVar.Pokemon.types) -> None:
             assert(isinstance(x,int) and isinstance(y,int))
-            assert(pokemon in list(GuiCfg.Pokemon.positions.keys()))
+            assert(pokemon in list(GuiVar.Pokemon.positions.keys()))
             self.__x, self.__y = x, y
-            self.__zone = GuiCfg.Pokemon.positions[pokemon][0]
+            self.__zone = GuiVar.Pokemon.positions[pokemon][0]
             pass
         def draw(self):
             pyxel.blt(self.__x,self.__y,0,self.__zone[0],self.__zone[1],16,16,self.__zone[2])
