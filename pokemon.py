@@ -1,4 +1,5 @@
-from random import randint
+from __future__ import annotations
+from random import randint, sample
 from typing import Literal
 
 class Pokemon_basics:
@@ -11,13 +12,17 @@ class Pokemon_basics:
     }
 
 class Pokemon_base:
-    def __init__(self,name:str,poke_type:Pokemon_basics.types_type_def,life:tuple[int,int]) -> None:
+    def __init__(self,name:str,poke_type:Pokemon_basics.types_type_def,life:tuple[int,int],atk_list:list[Pokemon_attack]=[]) -> None:
         assert(isinstance(name,str))
         assert(isinstance(poke_type,str))
         assert(isinstance(life,tuple) and len(life) == 2)
         assert(poke_type in Pokemon_basics.types)
+        assert(isinstance(atk_list,list))
+        for e in atk_list:
+            assert(isinstance(e,Pokemon_attack))
         self.__name = name
         self.__type: str = poke_type
+        self.__atk_list = atk_list
         self.__life: tuple[int, int] = life
         pass
     
@@ -36,13 +41,14 @@ class Pokemon_base:
     
     def get_life(self) -> tuple[int, int]:
         return self.__life
-
-    
+    def get_atk_list(self):
+        return self.__atk_list
     
 class Pokemon:
     def __init__(self,pokemon_base:Pokemon_base,custom_name:str|None=None) -> None:
         self.__poke = pokemon_base
         self.__name = custom_name or pokemon_base.get_name()
+        self.__atks = sample(self.__poke.get_atk_list(),4) if len(self.__poke.get_atk_list())>4 else self.__poke.get_atk_list()
         self.__max_life = randint(self.__poke.get_life()[0],self.__poke.get_life()[1])
         self.__life = self.__max_life
         pass
@@ -60,7 +66,7 @@ class Pokemon:
     def get_name(self):
         return self.__name
     
-class Pokemon_Attack:
+class Pokemon_attack:
     def __init__(self,name:str,typeatk:Pokemon_basics.types_type_def,damage:tuple[int,int],uses:tuple[int,int],priority:int,shock_itself:tuple[bool,tuple[int,int]|None]) -> None:
         assert(isinstance(name,str))
         assert(typeatk in Pokemon_basics.types)
@@ -68,11 +74,7 @@ class Pokemon_Attack:
         assert(isinstance(uses,tuple) and len(uses)==2)
         assert(isinstance(priority,int) and priority in range(0,101))
         assert(isinstance(shock_itself,tuple))
-        self.__shock_itself: dict[str, bool|tuple[int,int]] = {"enabled":shock_itself[0]}
-        if shock_itself[0]==True:
-            assert(isinstance(shock_itself[1],tuple))
-            assert(len(shock_itself[1])==2)
-            self.__shock_itself["damage"] = shock_itself[1]
+        self.__shock_itself: list[bool|tuple[int,int]] = [shock_itself[0], shock_itself[1] if shock_itself[0] and isinstance(shock_itself[1],tuple) and len(shock_itself[1])==2 else (0,0)]
         self.__name = name
         self.__typeatk = typeatk
         self.__damage = damage
@@ -80,10 +82,18 @@ class Pokemon_Attack:
         self.__uses = self.__max_uses
         
         pass
-    def attack(self,pokemon_attacked:Pokemon,):
-        self.__uses -= 1
+    def get_max_uses(self):return self.__max_uses
+    def get_uses(self):return self.__uses
+    def set_uses(self,uses:int): self.__uses = uses
+    
+    def attack(self,pokemon_attacked:Pokemon,pokemon_that_attack:Pokemon):
+        self.set_uses(self.get_uses()-1)
         #if pokemon_attacked.get_type()
         damage = randint(self.__damage[0],self.__damage[1])
         new_life = pokemon_attacked.get_life()-damage
         pokemon_attacked.set_life(new_life)
         return
+    
+    def get_name(self): return self.__name
+    def get_type(self): return self.__typeatk
+    def get_shock_itself(self): return self.__shock_itself
