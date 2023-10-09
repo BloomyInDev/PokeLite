@@ -1,3 +1,4 @@
+from typing import Callable
 from effects import Effects
 from pokemon import Attack_Scheme, Pokemon, Pokemon_basics
 from random import randint
@@ -6,7 +7,7 @@ class Custom_Attack:
     class Half_Life_Damage_Attack(Attack_Scheme):
         def __init__(self, name: str, typeatk: Pokemon_basics.types_type_def, uses: tuple[int, int], priority: int, shock_itself: tuple[bool, tuple[int, int] | None]) -> None:
             super().__init__(name, typeatk, (1,1), uses, priority, shock_itself)
-        def attack(self, pokemon_attacked:Pokemon, pokemon_that_attack:Pokemon,uses:function):
+        def attack(self, pokemon_attacked:Pokemon, pokemon_that_attack:Pokemon,uses:Callable[[],None]):
             assert(isinstance(pokemon_attacked,Pokemon))
             assert(isinstance(pokemon_that_attack,Pokemon))
             uses() # type:ignore
@@ -23,6 +24,6 @@ class Custom_Attack:
             assert(isinstance(effect,Effects.Base))
             self.__effect = effect
 
-        def attack(self, pokemon_attacked: Pokemon, pokemon_that_attack: Pokemon, uses:function):
+        def attack(self, pokemon_attacked: Pokemon, pokemon_that_attack: Pokemon,uses:Callable[[],None]):
 
             super().attack(pokemon_attacked, pokemon_that_attack,uses)

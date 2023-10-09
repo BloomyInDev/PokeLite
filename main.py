@@ -17,7 +17,7 @@ attack_list = {
 
 }
 pokemon_list = {
-    "salameche":Pokemon_base('Salamèche','fire',(114,146),[attack_list['charge'],attack_list['vive_attaque'],attack_list['flameche'],attack_list['lance_flamme']]),
+    "salameche":Pokemon_base('Salamèche','fire',(114,146),[Attack(attack_list['charge']),Attack(attack_list['vive_attaque']),Attack(attack_list['flameche']),Attack(attack_list['lance_flamme'])]),
     #"bulbizare":Pokemon_base('Bulbizare','grass',(120,152)),
     #"carapuce":Pokemon_base('Carapuce','water',(119,151)),
     #"pikachu":Pokemon_base('Pikachu','electric',(95,145)),
@@ -42,6 +42,12 @@ class Main:
         id_list_poke = randint(0,len(list_poke)-1)
         return Pokemon(pokemon_list[list_poke[id_list_poke]])
     def game_loop(self):
+        if self.p1.get_life() == 0:
+            print('Partie terminée, Joueur 2 a gagné !')
+            return
+        if self.p2.get_life() == 0:
+            print('Partie terminée, Joueur 1 a gagné !')
+            return
         p1_text = f'J1:{self.p1.get_name()},HP:{self.p1.get_life()}/{self.p1.get_max_life()}'
         p2_text = f'J2:{self.p2.get_name()},HP:{self.p2.get_life()}/{self.p2.get_max_life()}'
         spacing:str = ' '*(get_terminal_size()[0]-(len(p1_text)+len(p2_text))-4)
@@ -49,7 +55,6 @@ class Main:
         player_playing_obj = self.p1 if player_playing==1 else self.p2
         
         if self.turn%2==0 and self.turn != 0:
-            print('Doing actions')
             playing_order = Arena().decide_who_play_next(self.p1,self.p2)
             playing_order[0].use_next_act(playing_order[1])
             playing_order[1].use_next_act(playing_order[0])
@@ -73,11 +78,12 @@ class Main:
                 response = int(input(f'{question2_text}{list_atk}\n>>'))
                 player_playing_obj.set_next_act(player_playing_obj.get_attacks()[response-1])
             case 2:
-                pass
+                self.game_loop()
             case 3:
                 pass
             case 4:
-                pass
+                print(f'Vous abandonez, {player_playing} a perdu !')
+                return
             case _:
                 self.game_loop()
         self.turn += 1

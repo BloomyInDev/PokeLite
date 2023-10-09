@@ -1,6 +1,6 @@
 from __future__ import annotations
 from random import randint, sample
-from typing import Literal
+from typing import Callable, Literal
 
 
 class Pokemon_basics:
@@ -117,7 +117,7 @@ class Attack_Scheme(Act):
     def get_uses_range(self):return self.__max_uses
     def set_uses(self,uses:int): self.__uses = uses
 
-    def attack(self,pokemon_attacked:Pokemon,pokemon_that_attack:Pokemon,uses:function):
+    def attack(self,pokemon_attacked:Pokemon,pokemon_that_attack:Pokemon,uses:Callable[[],None]):
         uses() # type: ignore
         #if pokemon_attacked.get_type()
         damage = randint(self.__damage[0],self.__damage[1])
@@ -140,6 +140,6 @@ class Attack:
     def get_type(self):return self.__attack_scheme.get_type()
     def get_priority(self):return self.__attack_scheme.get_priority()
     def attack(self,pokemon_attacked:Pokemon,pokemon_that_attack:Pokemon):
-        print('doing atk')
-        return self.__attack_scheme.attack(pokemon_attacked,pokemon_that_attack,self.use_one_use())
+        print(f'{pokemon_that_attack.get_name()} utilise {self.__attack_scheme.get_name()} !')
+        return self.__attack_scheme.attack(pokemon_attacked,pokemon_that_attack,self.use_one_use)
 
