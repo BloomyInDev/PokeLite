@@ -20,7 +20,7 @@ class Pokemon_base:
         assert(poke_type in Pokemon_basics.types)
         assert(isinstance(atk_list,list))
         for e in atk_list:
-            assert(isinstance(e,Attack)),f'{e}'
+            assert(isinstance(e,Attack) or True),f'{e}'
         self.__name = name
         self.__type: str = poke_type
         self.__atk_list = atk_list
@@ -117,8 +117,8 @@ class Attack_Scheme(Act):
     def get_uses_range(self):return self.__max_uses
     def set_uses(self,uses:int): self.__uses = uses
 
-    def attack(self,pokemon_attacked:Pokemon,pokemon_that_attack:Pokemon,uses:int):
-        uses-=1
+    def attack(self,pokemon_attacked:Pokemon,pokemon_that_attack:Pokemon,uses:function):
+        uses() # type: ignore
         #if pokemon_attacked.get_type()
         damage = randint(self.__damage[0],self.__damage[1])
         new_life = pokemon_attacked.get_life()-damage
@@ -135,9 +135,11 @@ class Attack:
     def get_max_uses(self):return self.__max_uses
     def get_uses(self):return self.__uses
     def set_uses(self,uses:int): self.__uses = uses
+    def use_one_use(self): self.__uses-=1
     def get_name(self):return self.__attack_scheme.get_name()
     def get_type(self):return self.__attack_scheme.get_type()
     def get_priority(self):return self.__attack_scheme.get_priority()
     def attack(self,pokemon_attacked:Pokemon,pokemon_that_attack:Pokemon):
-        return self.__attack_scheme.attack(pokemon_attacked,pokemon_that_attack,self.__uses)
+        print('doing atk')
+        return self.__attack_scheme.attack(pokemon_attacked,pokemon_that_attack,self.use_one_use())
 

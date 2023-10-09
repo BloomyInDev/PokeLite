@@ -17,7 +17,7 @@ attack_list = {
 
 }
 pokemon_list = {
-    "salameche":Pokemon_base('Salamèche','fire',(114,146),[Attack(attack_list['charge']),Attack(attack_list['vive_attaque']),Attack(attack_list['flameche']),Attack(attack_list['lance_flamme'])]),
+    "salameche":Pokemon_base('Salamèche','fire',(114,146),[attack_list['charge'],attack_list['vive_attaque'],attack_list['flameche'],attack_list['lance_flamme']]),
     #"bulbizare":Pokemon_base('Bulbizare','grass',(120,152)),
     #"carapuce":Pokemon_base('Carapuce','water',(119,151)),
     #"pikachu":Pokemon_base('Pikachu','electric',(95,145)),
