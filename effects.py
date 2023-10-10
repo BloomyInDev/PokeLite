@@ -25,7 +25,7 @@ class Effect_Default:
 class Effects:
     class Base:
         def __init__(self) -> None:
-            self.e = Effect_Default('Sleep',False,0,False,0,7)
+            self.e = Effect_Default('Default',False,0,False,0,7)
             pass
         def get_name(self): return self.e.get_name()
         def can_atk(self): return self.e.can_atk()
@@ -34,7 +34,7 @@ class Effects:
         def reduce_effect_duration(self): return self.e.reduce_effect_duration()
     class Sleep(Base):
         def __init__(self) -> None:
-            self.e = Effect_Default('Sleep',False,0,False,0,7)
+            self.e = Effect_Default('Endormi',False,0,False,0,7)
     class Burn(Base):
         def __init__(self) -> None:
-            self.e = Effect_Default('Burn',True,50,True,10,-1)
+            self.e = Effect_Default('Brulure',True,50,True,10,-1)

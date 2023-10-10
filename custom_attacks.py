@@ -10,7 +10,7 @@ class Custom_Attack:
         def attack(self, pokemon_attacked:Pokemon, pokemon_that_attack:Pokemon,uses:Callable[[],None]):
             assert(isinstance(pokemon_attacked,Pokemon))
             assert(isinstance(pokemon_that_attack,Pokemon))
-            uses() # type:ignore
+            uses()
             new_life = pokemon_attacked.get_life()//2
             pokemon_attacked.set_life(new_life)
             if self.get_shock_itself()[0]:
@@ -25,5 +25,5 @@ class Custom_Attack:
             self.__effect = effect
 
         def attack(self, pokemon_attacked: Pokemon, pokemon_that_attack: Pokemon,uses:Callable[[],None]):
-
             super().attack(pokemon_attacked, pokemon_that_attack,uses)
+            self.__effect

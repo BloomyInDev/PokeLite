@@ -1,6 +1,7 @@
 from __future__ import annotations
 from random import randint, sample
 from typing import Callable, Literal
+from effects import Effects
 
 
 class Pokemon_basics:
@@ -29,9 +30,6 @@ class Pokemon_base:
     
     def get_name(self):
         return self.__name
-    def set_name(self,name:str):
-        assert(isinstance(name,str))
-        self.__name = name
     
     def get_type(self):
         return self.__type
@@ -52,6 +50,7 @@ class Pokemon:
         self.__atks = sample(self.__poke.get_atk_list(),4) if len(self.__poke.get_atk_list())>4 else self.__poke.get_atk_list()
         self.__max_life = randint(self.__poke.get_life()[0],self.__poke.get_life()[1])
         self.__life = self.__max_life
+        self.__effect: Effects.Base | None = None
         self.__next_act = Act('No act')
         pass
     def get_max_life(self):
@@ -75,11 +74,23 @@ class Pokemon:
         assert(isinstance(atk,Act) or isinstance(atk,Attack))
         self.__next_act = atk
     def get_next_act(self): return self.__next_act
-    def use_next_act(self,pokemon_attacked:Pokemon):
-        if isinstance(self.__next_act,Attack):
-            self.__next_act.attack(pokemon_attacked,self)
+    def execute_next_turn(self,pokemon_attacked:Pokemon):
+        can_atk = True
+        atk_proba = 100
+        
+        if isinstance(self.__effect,Effects.Base):
+            can_atk, atk_proba = self.__effect.can_atk()
+            if self.__effect.take_damage()[0]:
+                self.__effect.take_damage()[0]
+            self.__effect.end_effect()
         else:
-            self.__next_act.use(self)
+            if isinstance(self.__next_act,Attack):
+                if can_atk and randint(0,100)<=atk_proba:
+                    self.__next_act.attack(pokemon_attacked,self)
+
+            else:
+                self.__next_act.use(self)
+        #print(f'{self.get_name()} ne peut pas attaquer a cause de son effet: {self.__effect.get_name()}')
         self.__next_act = Act('No act')
 
 class Act:
@@ -118,10 +129,11 @@ class Attack_Scheme(Act):
     def set_uses(self,uses:int): self.__uses = uses
 
     def attack(self,pokemon_attacked:Pokemon,pokemon_that_attack:Pokemon,uses:Callable[[],None]):
-        uses() # type: ignore
+        uses()
         #if pokemon_attacked.get_type()
         damage = randint(self.__damage[0],self.__damage[1])
         new_life = pokemon_attacked.get_life()-damage
+        print(damage,new_life,pokemon_attacked.get_life())
         pokemon_attacked.set_life(new_life)
         return
 
