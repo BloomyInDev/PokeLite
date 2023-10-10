@@ -75,19 +75,23 @@ class Pokemon:
         self.__next_act = atk
     def get_next_act(self): return self.__next_act
     def execute_next_turn(self,pokemon_attacked:Pokemon):
-        can_atk = True
-        atk_proba = 100
         
         if isinstance(self.__effect,Effects.Base):
             can_atk, atk_proba = self.__effect.can_atk()
             if self.__effect.take_damage()[0]:
                 self.__effect.take_damage()[0]
             self.__effect.end_effect()
+            if can_atk and randint(0,100)<=atk_proba:
+                if isinstance(self.__next_act,Attack):
+                    self.__next_act.attack(pokemon_attacked,self)
+                else:
+                    self.__next_act.use(self)
+            else:
+                print(f'{self.get_name()} ne peut pas attaquer a cause de son effet: {self.__effect.get_name()}')
+                
         else:
             if isinstance(self.__next_act,Attack):
-                if can_atk and randint(0,100)<=atk_proba:
-                    self.__next_act.attack(pokemon_attacked,self)
-
+                self.__next_act.attack(pokemon_attacked,self)
             else:
                 self.__next_act.use(self)
         #print(f'{self.get_name()} ne peut pas attaquer a cause de son effet: {self.__effect.get_name()}')
