@@ -88,7 +88,13 @@ class Pokemon:
                     self.__next_act.use(self)
             else:
                 print(f'{self.get_name()} ne peut pas attaquer a cause de son effet: {self.__effect.get_name()}')
-                
+            take_damage, self_damage_val = self.__effect.take_damage()
+            if take_damage:
+                self.set_life(self.get_life()-self_damage_val)
+                print(f'{self.get_name()} prend des dégats a cause de son effet: {self.get_name()}')
+            self.__effect.reduce_effect_duration()
+            if self.__effect.end_effect() == False:
+                self.__effect = None
         else:
             if isinstance(self.__next_act,Attack):
                 self.__next_act.attack(pokemon_attacked,self)

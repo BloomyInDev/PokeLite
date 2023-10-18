@@ -2,20 +2,20 @@ import pyxel
 from guilib import GuiLib
 class Game:
     def __init__(self) -> None:
-        pyxel.init(128,160,fps=60)
+        pyxel.init(128,100,fps=60)
         pyxel.mouse(True)
         pyxel.load('./ressources.pyxres')
         self.__whereiam = 'home'
         self.__btn: list[GuiLib.Btn] = [
-            GuiLib.Btn(3,116,60,20,'Attaquer',7),
-            GuiLib.Btn(65,116,60,20,'Attaquer',7),
-            GuiLib.Btn(3,138,60,20,'Attaquer',7),
-            GuiLib.Btn(65,138,60,20,'Attaquer',7),
-            GuiLib.AtkBtn(3,90,60,20,'Morsure',7,(3,10),'Normal',7)
+            GuiLib.Btn(3,56,60,20,'Attaquer',7),
+            GuiLib.Btn(65,56,60,20,'Objets',7),
+            GuiLib.Btn(3,78,60,20,'Pokemon',7),
+            GuiLib.Btn(65,78,60,20,'Fuir',7),
+            GuiLib.AtkBtn(3,30,60,20,'Morsure',7,(2,10),'Normal',7)
         ]
         self.__poke: list[GuiLib.Pokemon] = [
-            GuiLib.Pokemon(3,70,'carapuce'),
-            GuiLib.Pokemon(33,70,'bulbizare')
+            GuiLib.Pokemon(3,10,'carapuce'),
+            GuiLib.Pokemon(33,10,'bulbizare')
         ]
         
         

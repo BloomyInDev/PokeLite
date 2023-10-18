@@ -1,7 +1,8 @@
 from os import get_terminal_size
 from arena import Arena
+#from networking import coucou, execute_async
 
-class Main:
+class Multiplayer_Local:
     def __init__(self) -> None:
         print("Pokemon - Lite Edition")
         self.p1, self.p2 = Arena().choose_random_poke(), Arena().choose_random_poke()
@@ -60,7 +61,12 @@ class Main:
         self.turn += 1
         self.game_loop()
         
-
+class Multiplayer_Online:
+    def __init__(self) -> None:
+        # Task for future me
+        #execute_async(coucou)
+        pass
 #print(f"{spaces}\nTour de Joueur 1\n{spaces}")
 #print(f'Attaquer\nQue voulez vous faire ?')
-Main()
+local = Multiplayer_Local()
+#Multiplayer_Online()
