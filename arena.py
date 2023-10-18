@@ -1,11 +1,12 @@
 from custom_attacks import Custom_Attack
 from pokemon import Attack, Attack_Scheme, Pokemon, Pokemon_base
+from effects import Effects
 from random import randint
 class Arena_Data:
     attack_list = {
         "charge":Attack_Scheme('Charge','normal', (30,35),(20,20),50,(False,None)),
         "trempette":Attack_Scheme('Trempette','water',(0,0),(40,40),50,(False,None)),
-        "flameche":Attack_Scheme('Flammèche','fire',(20,25),(25,25),50,(False,None)),
+        "flameche":Custom_Attack.Attack_With_Effect('Flammèche','fire',(20,25),(25,25),50,(False,None),Effects.Burn()),
         "pistolet_a_o":Attack_Scheme('Pistolet à O','water',(20,25),(25,25),50,(False,None)),
         "etincelle":Attack_Scheme('Etincelle','electric',(20,25),(25,25),50,(False,None)),
         "belier":Attack_Scheme('Bélier','normal',(80,85),(15,15),50,(True,(15,20),)),

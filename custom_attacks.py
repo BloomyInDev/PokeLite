@@ -21,9 +21,9 @@ class Custom_Attack:
     class Attack_With_Effect(Attack_Scheme):
         def __init__(self, name: str, typeatk: Pokemon_basics.types_type_def, damage: tuple[int, int], uses: tuple[int, int], priority: int, shock_itself: tuple[bool, tuple[int, int] | None],effect:Effects.Base) -> None:
             super().__init__(name, typeatk, damage, uses, priority, shock_itself)
-            assert(isinstance(effect,Effects.Base))
+            #assert(isinstance(effect,Effects.Base))
             self.__effect = effect
 
         def attack(self, pokemon_attacked: Pokemon, pokemon_that_attack: Pokemon,uses:Callable[[],None]):
             super().attack(pokemon_attacked, pokemon_that_attack,uses)
-            self.__effect
+            pokemon_attacked.set_effect(self.__effect)

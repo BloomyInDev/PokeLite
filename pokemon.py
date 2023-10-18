@@ -70,6 +70,11 @@ class Pokemon:
     def get_attacks(self):
         return self.__atks
     
+    def get_effect(self): return self.__effect
+    def set_effect(self, effect:Effects.Base): 
+        assert(isinstance(effect,Effects.Base))
+        self.__effect = effect
+    
     def set_next_act(self,atk:Act|Attack):
         assert(isinstance(atk,Act) or isinstance(atk,Attack))
         self.__next_act = atk
@@ -77,10 +82,12 @@ class Pokemon:
     def execute_next_turn(self,pokemon_attacked:Pokemon):
         
         if isinstance(self.__effect,Effects.Base):
+            print(f'{self.__name} have effect, {self.__effect.get_name()},{self.__effect.can_atk()},{self.__effect.take_damage()},{self.__effect.end_effect()}')
             can_atk, atk_proba = self.__effect.can_atk()
             if self.__effect.take_damage()[0]:
-                self.__effect.take_damage()[0]
-            self.__effect.end_effect()
+                print(f'{self.__name} subit son effet: {self.__effect.get_name()}')
+                self.set_life(self.get_life()-self.__effect.take_damage()[1])
+            self.__effect.reduce_effect_duration()
             if can_atk and randint(0,100)<=atk_proba:
                 if isinstance(self.__next_act,Attack):
                     self.__next_act.attack(pokemon_attacked,self)
@@ -94,13 +101,15 @@ class Pokemon:
                 print(f'{self.get_name()} prend des dégats a cause de son effet: {self.get_name()}')
             self.__effect.reduce_effect_duration()
             if self.__effect.end_effect() == False:
+                print(f'{self.__name} ne subit plus son effet {self.__effect.get_name()}')
+
                 self.__effect = None
         else:
+            print(f'{self.__name} dont have effect')
             if isinstance(self.__next_act,Attack):
                 self.__next_act.attack(pokemon_attacked,self)
             else:
                 self.__next_act.use(self)
-        #print(f'{self.get_name()} ne peut pas attaquer a cause de son effet: {self.__effect.get_name()}')
         self.__next_act = Act('No act')
 
 class Act:
