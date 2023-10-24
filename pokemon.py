@@ -5,8 +5,8 @@ from effects import Effects
 
 
 class Pokemon_basics:
-    types = ['normal','fire','water','grass','electric','rock','ghost']
-    types_type_def = Literal['normal','fire','water','grass','electric','rock','ghost']
+    types = ['normal','fire','water','grass','electric','ghost']
+    types_type_def = Literal['normal','fire','water','grass','electric','ghost']
     type_bonus_malus: dict[str, dict[str, types_type_def|None] | dict[str, str]] = {
         'normal':{'bonus':None,'malus':None},
         'fire':{'bonus':'grass','malus':'water'},

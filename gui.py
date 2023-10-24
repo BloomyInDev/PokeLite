@@ -11,7 +11,7 @@ class Game:
             GuiLib.Btn(65,56,60,20,'Objets',7),
             GuiLib.Btn(3,78,60,20,'Pokemon',7),
             GuiLib.Btn(65,78,60,20,'Fuir',7),
-            GuiLib.AtkBtn(3,30,60,20,'Morsure',7,(2,10),'Normal',7)
+            GuiLib.AtkBtn(3,30,60,20,'Morsure',7,(2,10),'normal')
         ]
         self.__poke: list[GuiLib.Pokemon] = [
             GuiLib.Pokemon(3,10,'carapuce'),

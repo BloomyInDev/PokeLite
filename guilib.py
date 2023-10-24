@@ -13,6 +13,16 @@ class GuiVar:
             "ectoplasma":[(0,16,0)]
         }
         types = Literal["salameche","bulbizare","carapuce","pikachu","magicarpe","chrysapile","rattatac","ectoplasma"]
+    class Types:
+        positions: dict[str, tuple[int,int,int]] = {
+            "normal":(0,8,0),
+            "fire":(8,8,0),
+            "water":(16,8,0),
+            "grass":(24,8,0),
+            "electric":(32,8,0),
+            "ghost":(40,8,0)
+        }
+        types = Literal['normal','fire','water','grass','electric','ghost']
 class GuiLib:
     class Pokemon:
         def __init__(self,x:int,y:int,pokemon:GuiVar.Pokemon.types) -> None:
@@ -23,6 +33,9 @@ class GuiLib:
             pass
         def draw(self):
             pyxel.blt(self.__x,self.__y,0,self.__zone[0],self.__zone[1],16,16,self.__zone[2])
+            pass
+    class PokemonStatus:
+        def __init__(self) -> None:
             pass
     class Btn:
         def __init__(self,x:int,y:int,w:int,h:int,text:str,col:int) -> None:
@@ -79,17 +92,18 @@ class GuiLib:
             x_text_pos = ((self.__w-len(self.__text)*4)//2)+self.__x
             pyxel.text(x_text_pos,y_text_pos,self.__text,self.__col)
     class AtkBtn(Btn):
-        def __init__(self, x: int, y: int, w: int, h: int, atktxt: str, atkcol: int, usesnb: tuple[int,int], typetxt: str, typecol: int) -> None:
+        def __init__(self, x: int, y: int, w: int, h: int, atktxt: str, atkcol: int, usesnb: tuple[int,int], atktype: GuiVar.Types.types) -> None:
             super().__init__(x, y, w, h, atktxt, atkcol)
             assert(isinstance(usesnb,tuple))
             assert(isinstance(usesnb[0],int) & isinstance(usesnb[1],int))
-            assert(isinstance(typecol,int) & isinstance(typetxt,str))
+            assert(atktype in list(GuiVar.Types.positions.keys()))
             self.__uses_nb = usesnb
-            self.__type_col, self.__type_txt = typecol, typetxt
+            self.__type=atktype
         def _draw_text(self):
             # Atk name
             pyxel.text(self.get_x()+2,self.get_y()+2,self.get_text(),self.get_col())
             # Atk uses
             uses_col = 8 if self.__uses_nb[0]<=2 else 7
             pyxel.text(self.get_x()+2,self.get_y()+self.get_h()-8,f'Uses:{self.__uses_nb[0]}/{self.__uses_nb[1]}',uses_col)
+            pyxel.blt(self.get_x()+self.get_w()-10,self.get_y()+(self.get_h()//2)-4,1,GuiVar.Types.positions[self.__type][0],GuiVar.Types.positions[self.__type][1],8,8,GuiVar.Types.positions[self.__type][2])
             #pyxel.text(self.get_x()+2,self.get_y()+2,self.get_text(),self.get_col())
