@@ -1,4 +1,5 @@
 from typing import Literal
+from pokemon import Pokemon
 import pyxel
 class GuiVar:
     class Pokemon:
@@ -25,17 +26,51 @@ class GuiVar:
         types = Literal['normal','fire','water','grass','electric','ghost']
 class GuiLib:
     class Pokemon:
-        def __init__(self,x:int,y:int,pokemon:GuiVar.Pokemon.types) -> None:
+        def __init__(self,x:int,y:int,pokemon:GuiVar.Pokemon.types,flip:bool=False) -> None:
             assert(isinstance(x,int) and isinstance(y,int))
             assert(pokemon in list(GuiVar.Pokemon.positions.keys()))
+            assert(isinstance(flip,bool))
             self.__x, self.__y = x, y
             self.__zone = GuiVar.Pokemon.positions[pokemon][0]
+            self.__flip:int = -16 if flip else 16
             pass
         def draw(self):
-            pyxel.blt(self.__x,self.__y,0,self.__zone[0],self.__zone[1],16,16,self.__zone[2])
+            pyxel.blt(self.__x,self.__y,0,self.__zone[0],self.__zone[1],self.__flip,16,self.__zone[2])
+            pass
+        def update(self):
             pass
     class PokemonStatus:
-        def __init__(self) -> None:
+        def __init__(self,x:int,y:int,pokemon:Pokemon) -> None:
+            assert(isinstance(x,int) and isinstance(y,int))
+            self.__x, self.__y = x, y
+            self.__poke = pokemon
+            pass
+        def draw(self):
+            # Background
+            pyxel.blt(self.__x   ,self.__y   ,1,0,0,2,2,0)
+            pyxel.blt(self.__x+48,self.__y   ,1,2,0,2,2,0)
+            pyxel.blt(self.__x   ,self.__y+18,1,0,2,2,2,0)
+            pyxel.blt(self.__x+48,self.__y+18,1,2,2,2,2,0)
+            for i in range(1,48):
+                pyxel.blt(self.__x+i,self.__y   ,1,1,0,1,2,0)
+                pyxel.blt(self.__x+i,self.__y+18,1,2,2,1,2,0)
+            for x in range(50):
+                for y in range(2,18):
+                    pyxel.blt(self.__x+x,self.__y+y,1,1,1,1,1,0)
+            
+            # Pokemon
+            pyxel.text(self.__x+2,self.__y+2,self.__poke.get_name(),7)
+            typecoords = GuiVar.Types.positions[self.__poke.get_type()]
+            pyxel.blt(self.__x+40,self.__y+2,1,typecoords[0],typecoords[1],8,8,typecoords[2])
+            
+            # Life Bar
+            pyxel.rectb(self.__x+2,self.__y+12,42,5,13)
+            for x in [self.__x+2,self.__x+43]:
+                for y in [self.__y+12,self.__y+16]:
+                    pyxel.pset(x,y,1)
+            pyxel.rect(self.__x+3,self.__y+13,int((self.__poke.get_life()/self.__poke.get_max_life())*40),3,8)
+            pass
+        def update(self):
             pass
     class Btn:
         def __init__(self,x:int,y:int,w:int,h:int,text:str,col:int) -> None:

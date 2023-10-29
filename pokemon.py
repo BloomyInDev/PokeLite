@@ -14,7 +14,8 @@ class Pokemon_basics:
     }
 
 class Pokemon_base:
-    def __init__(self,name:str,poke_type:Pokemon_basics.types_type_def,life:tuple[int,int],atk_list:list[Attack]=[]) -> None:
+    def __init__(self,id:str,name:str,poke_type:Pokemon_basics.types_type_def,life:tuple[int,int],atk_list:list[Attack]=[]) -> None:
+        assert(isinstance(id,str))
         assert(isinstance(name,str))
         assert(isinstance(poke_type,str))
         assert(isinstance(life,tuple) and len(life) == 2)
@@ -22,12 +23,14 @@ class Pokemon_base:
         assert(isinstance(atk_list,list))
         for e in atk_list:
             assert(isinstance(e,Attack) or True),f'{e}'
+        self.__id = id
         self.__name = name
         self.__type: str = poke_type
         self.__atk_list = atk_list
         self.__life: tuple[int, int] = life
         pass
-    
+    def get_id(self):
+        return self.__id
     def get_name(self):
         return self.__name
     
@@ -66,7 +69,8 @@ class Pokemon:
     
     def get_name(self):
         return self.__name
-    
+    def get_id(self):
+        return self.__poke.get_id()
     def get_attacks(self):
         return self.__atks
     
