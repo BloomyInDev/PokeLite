@@ -17,13 +17,13 @@ class Arena_Data:
     }
     pokemon_list = {
         "salameche":Pokemon_base("salameche",'Salamèche','fire',(114,146),[Attack(attack_list['charge']),Attack(attack_list['vive_attaque']),Attack(attack_list['flameche']),Attack(attack_list['lance_flamme'])]),
-        #"bulbizare":Pokemon_base("bulbizare",'Bulbizare','grass',(120,152)),
-        #"carapuce":Pokemon_base("carapuce",'Carapuce','water',(119,151)),
-        #"pikachu":Pokemon_base("pikachu",'Pikachu','electric',(95,145)),
-        #"magicarpe":Pokemon_base("magicarpe",'Magicarpe','water',(95,127)),
-        #"chrysapile":Pokemon_base("chrysapile",'Chrysapile','grass',(132,164)),
-        "rattatac":Pokemon_base("rattatac",'Rattatac','normal',(130,162),[Attack(attack_list['croc_fatal']),Attack(attack_list['vive_attaque'])]),
-        #"ectoplasma":Pokemon_base("ectoplasma",'Ectoplasma','ghost',(135,167))
+        "bulbizare":Pokemon_base("bulbizare",'Bulbizare','grass',(120,152),[Attack(attack_list['charge']),Attack(attack_list['vive_attaque'])]),
+        "carapuce":Pokemon_base("carapuce",'Carapuce','water',(119,151),[Attack(attack_list['charge']),Attack(attack_list['vive_attaque'])]),
+        "pikachu":Pokemon_base("pikachu",'Pikachu','electric',(95,145),[Attack(attack_list['charge']),Attack(attack_list['vive_attaque'])]),
+        "magicarpe":Pokemon_base("magicarpe",'Magicarpe','water',(95,127),[Attack(attack_list['charge']),Attack(attack_list['vive_attaque'])]),
+        "chrysapile":Pokemon_base("chrysapile",'Chrysapile','grass',(132,164),[Attack(attack_list['charge']),Attack(attack_list['vive_attaque'])]),
+        "rattatac":Pokemon_base("rattatac",'Rattatac','normal',(130,162),[Attack(attack_list['charge']),Attack(attack_list['vive_attaque']),Attack(attack_list['croc_fatal'])]),
+        "ectoplasma":Pokemon_base("ectoplasma",'Ectoplasma','ghost',(135,167),[Attack(attack_list['charge']),Attack(attack_list['vive_attaque'])])
     }
 class Arena:
     def __init__(self) -> None:

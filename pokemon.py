@@ -7,11 +7,6 @@ from effects import Effects
 class Pokemon_basics:
     types = ['normal','fire','water','grass','electric','ghost']
     types_type_def = Literal['normal','fire','water','grass','electric','ghost']
-    type_bonus_malus: dict[str, dict[str, types_type_def|None] | dict[str, str]] = {
-        'normal':{'bonus':None,'malus':None},
-        'fire':{'bonus':'grass','malus':'water'},
-        'water':{'bonus':''}
-    }
 
 class Pokemon_base:
     def __init__(self,id:str,name:str,poke_type:Pokemon_basics.types_type_def,life:tuple[int,int],atk_list:list[Attack]=[]) -> None:
@@ -48,6 +43,8 @@ class Pokemon_base:
     
 class Pokemon:
     def __init__(self,pokemon_base:Pokemon_base,custom_name:str|None=None) -> None:
+        assert(isinstance(custom_name,str))
+        assert(1<=len(custom_name)<=10)
         self.__poke = pokemon_base
         self.__name = custom_name or pokemon_base.get_name()
         self.__atks = sample(self.__poke.get_atk_list(),4) if len(self.__poke.get_atk_list())>4 else self.__poke.get_atk_list()

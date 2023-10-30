@@ -25,6 +25,23 @@ class GuiVar:
         }
         types = Literal['normal','fire','water','grass','electric','ghost']
 class GuiLib:
+    class BltUpscaler:
+        def __init__(self,x:int,y:int,multiply:int,original_args:tuple[int,int,int,int,int,int]) -> None:
+            assert(isinstance(x,int) and isinstance(y,int))
+            assert(isinstance(multiply,int))
+            self.__x, self.__y, self.__multiply = x, y, multiply
+            self.__original_args = (original_args[0],original_args[1],original_args[2],original_args[3],original_args[4],original_args[5])
+            pass
+        def draw(self):
+            #pyxel.blt(self.__original_args[6],self.__original_args[7])
+            dir = -1 if self.__original_args[3]<=1 else 1
+            for x in range(0,self.__original_args[3],dir):
+                for y in range(self.__original_args[4]):
+                    #pyxel.pset(self.__x+(x*self.__multiply),self.__y+(y*self.__multiply),7)
+                    pyxel.blt(self.__x+(x*self.__multiply),self.__y+(y*self.__multiply),self.__original_args[0],self.__original_args[1]+abs(x),self.__original_args[2]+y,1,1,self.__original_args[5])
+                    if pyxel.pget(self.__x+(x*self.__multiply),self.__y+(y*self.__multiply)) != self.__original_args[5]:
+                        pyxel.rect(self.__x+(x*self.__multiply),self.__y+(y*self.__multiply),self.__multiply,self.__multiply,pyxel.pget(self.__x+(x*self.__multiply),self.__y+(y*self.__multiply)))
+                    #pyxel.rect(x,y,self.__multiply,self.__multiply,pyxel.pget(y,x))
     class Pokemon:
         def __init__(self,x:int,y:int,pokemon:GuiVar.Pokemon.types,flip:bool=False) -> None:
             assert(isinstance(x,int) and isinstance(y,int))
@@ -35,7 +52,7 @@ class GuiLib:
             self.__flip:int = -16 if flip else 16
             pass
         def draw(self):
-            pyxel.blt(self.__x,self.__y,0,self.__zone[0],self.__zone[1],self.__flip,16,self.__zone[2])
+            GuiLib.BltUpscaler(self.__x,self.__y,2,(0,self.__zone[0],self.__zone[1],self.__flip,16,self.__zone[2])).draw()
             pass
         def update(self):
             pass
@@ -48,27 +65,35 @@ class GuiLib:
         def draw(self):
             # Background
             pyxel.blt(self.__x   ,self.__y   ,1,0,0,2,2,0)
-            pyxel.blt(self.__x+48,self.__y   ,1,2,0,2,2,0)
-            pyxel.blt(self.__x   ,self.__y+18,1,0,2,2,2,0)
-            pyxel.blt(self.__x+48,self.__y+18,1,2,2,2,2,0)
-            for i in range(1,48):
+            pyxel.blt(self.__x+52,self.__y   ,1,2,0,2,2,0)
+            pyxel.blt(self.__x   ,self.__y+20,1,0,2,2,2,0)
+            pyxel.blt(self.__x+52,self.__y+20,1,2,2,2,2,0)
+            for i in range(1,52):
                 pyxel.blt(self.__x+i,self.__y   ,1,1,0,1,2,0)
-                pyxel.blt(self.__x+i,self.__y+18,1,2,2,1,2,0)
-            for x in range(50):
-                for y in range(2,18):
+                pyxel.blt(self.__x+i,self.__y+20,1,2,2,1,2,0)
+            for x in range(54):
+                for y in range(2,20):
                     pyxel.blt(self.__x+x,self.__y+y,1,1,1,1,1,0)
             
             # Pokemon
             pyxel.text(self.__x+2,self.__y+2,self.__poke.get_name(),7)
             typecoords = GuiVar.Types.positions[self.__poke.get_type()]
-            pyxel.blt(self.__x+40,self.__y+2,1,typecoords[0],typecoords[1],8,8,typecoords[2])
+            pyxel.blt(self.__x+45,self.__y+1,1,typecoords[0],typecoords[1],8,8,typecoords[2])
             
             # Life Bar
-            pyxel.rectb(self.__x+2,self.__y+12,42,5,13)
-            for x in [self.__x+2,self.__x+43]:
-                for y in [self.__y+12,self.__y+16]:
+            pyxel.rectb(self.__x+2,self.__y+9,41,5,13)
+            for x in [self.__x+2,self.__x+42]:
+                for y in [self.__y+9,self.__y+13]:
                     pyxel.pset(x,y,1)
-            pyxel.rect(self.__x+3,self.__y+13,int((self.__poke.get_life()/self.__poke.get_max_life())*40),3,8)
+            pyxel.rect(self.__x+3,self.__y+10,int((self.__poke.get_life()/self.__poke.get_max_life())*39),3,8)
+            life_col:int
+            life_percent = (self.__poke.get_life()/self.__poke.get_max_life())*100
+            if life_percent <= 10: life_col = 8
+            elif life_percent <= 30: life_col = 9
+            elif life_percent <= 50: life_col = 10
+            else: life_col = 7
+            pyxel.text(self.__x+2,self.__y+15,str(self.__poke.get_life()),life_col)
+            pyxel.text(self.__x+44-(4*len(str(self.__poke.get_max_life()))),self.__y+15,str(self.__poke.get_max_life()),7)
             pass
         def update(self):
             pass
