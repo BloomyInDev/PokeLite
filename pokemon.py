@@ -1,6 +1,6 @@
 from __future__ import annotations
 from random import randint, sample
-from typing import Callable, Literal
+from typing import Callable, Literal, Union
 from effects import Effects
 
 
@@ -43,8 +43,8 @@ class Pokemon_base:
     
 class Pokemon:
     def __init__(self,pokemon_base:Pokemon_base,custom_name:str|None=None) -> None:
-        assert(isinstance(custom_name,str))
-        assert(1<=len(custom_name)<=10)
+        assert(isinstance(custom_name,Union[str,None]))
+        if custom_name != None: assert(1<=len(custom_name)<=10)
         self.__poke = pokemon_base
         self.__name = custom_name or pokemon_base.get_name()
         self.__atks = sample(self.__poke.get_atk_list(),4) if len(self.__poke.get_atk_list())>4 else self.__poke.get_atk_list()

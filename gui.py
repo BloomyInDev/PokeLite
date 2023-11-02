@@ -1,32 +1,125 @@
+from typing import Literal
 import pyxel
 from guilib import GuiLib
 from arena import Arena
-p1, p2 = Arena().choose_random_poke(), Arena().choose_random_poke()
+
 class Game:
     def __init__(self) -> None:
-        pyxel.init(128,102,fps=60)
+        pyxel.init(128,102,fps=60,title='PokeLite')
         pyxel.mouse(True)
         pyxel.load('./ressources.pyxres')
-        self.__whereiam = 'home'
-        self.__ui = [
-            GuiLib.Btn(3,58,60,20,'Attaquer',7),
-            GuiLib.Btn(65,58,60,20,'Objets',7),
-            GuiLib.Btn(3,80,60,20,'Pokemon',7),
-            GuiLib.Btn(65,80,60,20,'Fuir',7),
-            #GuiLib.AtkBtn(3,30,60,20,'Morsure',7,(2,10),'normal'),
-            GuiLib.Pokemon(3,23,p1.get_id()),
-            GuiLib.Pokemon(122,23,p2.get_id(),True),
-            GuiLib.PokemonStatus(3,2,p1),
-            GuiLib.PokemonStatus(71,2,p2)
-        ]
+        self.__p1, self.__p2 = Arena().choose_random_poke(), Arena().choose_random_poke()
+        self.__round, self.__last_interact = 0, 0
+        self.__player_playing = Arena().what_is_the_player_that_plays(self.__round,self.__p1,self.__p2)
+        self.__where_i_am: Literal['home','settings','game-choose-action','game-choose-atk','game-choose-obj','game-choose-poke','game-action'] = 'game-choose-action'
+        self.__action_start_end:tuple[int,int] = (0,0)
+        self.__p1_x_pos, self.__p2_x_pos = 3, 122
+        self.__ui: dict[str, GuiLib.Btn | GuiLib.Pokemon | GuiLib.PokemonStatus | GuiLib.Txt | None] = {
+            "atk_btn":GuiLib.Btn("atk_btn",3,58,60,20,'Attaquer',7),
+            "obj_btn":GuiLib.Btn("obj_btn",65,58,60,20,'Objets',7),
+            "poke_btn":GuiLib.Btn("poke_btn",3,80,60,20,'Pokemon',7),
+            "leave_btn":GuiLib.Btn("leave_btn",65,80,60,20,'Fuir',7),
+            "p1_poke":GuiLib.Pokemon("p1_poke",self.__p1_x_pos,23,self.__p1.get_id()), # type: ignore # Need this cuz my IDE is mad else
+            "p2_poke":GuiLib.Pokemon("p2_poke",self.__p2_x_pos,23,self.__p2.get_id(),True), # type: ignore # Same as line before
+            "p1_stat":GuiLib.PokemonStatus("p1_stat",3,2,self.__p1),
+            "p2_stat":GuiLib.PokemonStatus("p1_stat",71,2,self.__p2)
+        }
         pyxel.run(self.update,self.draw)
         pass
     def update(self) -> None:
-        if pyxel.frame_count%10 == 0:
-            p1.set_life(p1.get_life()-1)
-            p2.set_life(p2.get_life()-1)
-        for uie in self.__ui:
-            uie.update()
+        if self.__where_i_am == "game-action":
+            if pyxel.frame_count > self.__action_start_end[1]:
+                self.__action_start_end = (pyxel.frame_count,pyxel.frame_count+105)
+            if pyxel.frame_count <= self.__action_start_end[0]+90:
+                if ((self.__round%2)+1)==1:
+                    if pyxel.frame_count <=self.__action_start_end[0]+45:
+                        self.__p1_x_pos+=1
+                    else:
+                        self.__p1_x_pos-=1
+                else:
+                    if pyxel.frame_count <=self.__action_start_end[0]+45:
+                        self.__p2_x_pos-=1
+                    else:
+                        self.__p2_x_pos+=1
+                #print('doing something')
+            if pyxel.frame_count == self.__action_start_end[0]+45:
+                print('Now animating life')
+                self.__player_playing.execute_next_turn(Arena().what_is_the_player_that_isnt_playing(self.__round,self.__p1,self.__p2))
+                for e in ['p1_stat','p2_stat']:
+                    uie = self.__ui[e]
+                    assert(isinstance(uie,GuiLib.PokemonStatus))
+                    uie.animate_life(60)
+            if pyxel.frame_count == self.__action_start_end[1]:
+                self.__round += 1
+                self.__where_i_am = 'game-choose-action'
+                self.__ui["atk_btn"] = GuiLib.Btn("atk_btn",3,58,60,20,'Attaquer',7)
+                self.__ui["obj_btn"]=GuiLib.Btn("obj_btn",65,58,60,20,'Objets',7)
+                self.__ui["poke_btn"]=GuiLib.Btn("poke_btn",3,80,60,20,'Pokemon',7)
+                self.__ui["leave_btn"]=GuiLib.Btn("leave_btn",65,80,60,20,'Fuir',7)
+        i = 0
+        while i<len(self.__ui.keys()):
+            pass_to_next_i: bool = True
+            mouse_click = pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT)
+            uie = self.__ui[list(self.__ui.keys())[i]]
+            if uie != None:
+                uie.update()
+                if isinstance(uie,GuiLib.Btn):
+                    if uie.is_clicked(mouse_click):
+                        if self.__last_interact + 10 < pyxel.frame_count:
+                            self.__last_interact = pyxel.frame_count                                
+                            match self.__where_i_am:
+                                case 'home':
+                                    print('in home')
+                                case 'game-choose-action':
+                                    match uie.id:
+                                        case 'atk_btn':
+                                            pass_to_next_i = False
+                                            for e in ["atk_btn","obj_btn","poke_btn","leave_btn"]:
+                                                self.__ui.pop(e)
+                                            for i, attack in enumerate(self.__player_playing.get_attacks()):
+                                                x = 3+(62*(i%2))
+                                                y = 58+(22*(i//2))
+                                                self.__ui[f'atk{i+1}_atk_btn'] = GuiLib.AtkBtn(f'atk{i+1}_atk_btn',x,y,60,20,attack.get_name(),7,(attack.get_uses(),attack.get_max_uses()),attack.get_type(),attack) # type: ignore
+                                            self.__where_i_am = 'game-choose-atk'
+                                        case 'obj_btn':
+                                            pass_to_next_i = False
+                                            for e in ["atk_btn","obj_btn","poke_btn","leave_btn"]:
+                                                self.__ui.pop(e)
+                                            self.__where_i_am = 'game-choose-obj'
+                                        case 'poke_btn':
+                                            pass_to_next_i = False
+                                            for e in ["atk_btn","obj_btn","poke_btn","leave_btn"]:
+                                                self.__ui.pop(e)
+                                            self.__where_i_am = 'game-choose-poke'
+                                        case 'leave_btn':
+                                            pass_to_next_i = False
+                                            for e in ["atk_btn","obj_btn","poke_btn","leave_btn"]:
+                                                self.__ui.pop(e)
+                                            self.__ui['loose_msg'] = GuiLib.Txt(12,75,f'Vous abandonez, {(self.__round%2)+1} a perdu !',7)
+                                        case _:
+                                            pass
+                                case 'game-choose-atk':
+                                    if uie.id in ['atk1_atk_btn','atk2_atk_btn','atk3_atk_btn','atk4_atk_btn']:
+                                        assert(isinstance(uie,GuiLib.AtkBtn))
+                                        pass_to_next_i = False
+                                        self.__player_playing.set_next_act(uie.atk)
+                                        for e in ['atk1_atk_btn','atk2_atk_btn','atk3_atk_btn','atk4_atk_btn']:
+                                            if e in list(self.__ui.keys()):
+                                                self.__ui.pop(e)
+                                        self.__where_i_am = 'game-action'
+                                case _:
+                                    print(f'idk where i am\nHere the data:{self.__where_i_am},{uie}')
+                            #print(f'{uie.id} has been clicked')
+                            uie.click_handled()
+                elif isinstance(uie,GuiLib.Pokemon):
+                    match list(self.__ui.keys())[i]:
+                        case "p1_poke":
+                            uie.set_x(self.__p1_x_pos)
+                        case "p2_poke":
+                            uie.set_x(self.__p2_x_pos)
+                        case _: # Should not go here, it's to make my IDE happy
+                            pass
+            if pass_to_next_i: i+=1
         pass
     def draw(self) -> None:
         pyxel.cls(0)
@@ -35,8 +128,11 @@ class Game:
         #pyxel.text(0,10,'ABCDEFGHIJKLMNOPQRSTUVWXYZ',10)
         pyxel.rect(0,55,128,1,3)
         pyxel.rect(0,56,128,100,11)
-        for uie in self.__ui:
-            uie.draw()
+        pyxel.text(60,5,f'J{(self.__round%2)+1}',7)
+        for e in self.__ui.keys():
+            uie = self.__ui[e]
+            if uie != None:
+                uie.draw()
         #match self.__whereiam:
         #    case 'home':
         #        pass

@@ -45,3 +45,7 @@ class Arena:
                 return player1,player2
             else:
                 return player2,player1
+    def what_is_the_player_that_plays(self,round:int,player1:Pokemon,player2:Pokemon):
+        return player1 if round%2==0 else player2
+    def what_is_the_player_that_isnt_playing(self,round:int,player1:Pokemon,player2:Pokemon):
+        return player2 if round%2==0 else player1
