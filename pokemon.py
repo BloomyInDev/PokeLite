@@ -67,6 +67,12 @@ class Pokemon:
     def get_life(self):
         return self.__life
 
+    def is_alive(self):
+        return self.__life != 0
+
+    def is_dead(self):
+        return self.__life == 0
+
     def set_life(self, life: int):
         assert isinstance(life, int)
         self.__life = 0 if life <= 0 else life

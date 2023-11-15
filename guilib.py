@@ -272,6 +272,14 @@ class GuiLib:
             )
             # pyxel.text(self.get_x()+2,self.get_y()+2,self.get_text(),self.get_col())
 
+    class ReturnBtn(Btn):
+        def __init__(self, id: str, x: int, y: int) -> None:
+            super().__init__(id, x, y, 8, 8, "", 7)
+
+        def draw(self):
+            super().draw()
+            pyxel.rect(self.get_x() + 2, self.get_y() + 2, 4, 1, 7)
+
     class Txt:
         def __init__(self, x: int, y: int, txt: str, col: int) -> None:
             assert isinstance(x, int) and isinstance(y, int) and isinstance(txt, str) and isinstance(col, int)
