@@ -102,11 +102,13 @@ class Game:
                                             pass_to_next_i = False
                                             for e in ["atk_btn", "obj_btn", "poke_btn", "leave_btn"]:
                                                 self.__ui.pop(e)
+                                            self.__ui["return_btn"] = GuiLib.ReturnBtn("return_btn", 58, 75)
                                             self.__where_i_am = "game-choose-obj"
                                         case "poke_btn":
                                             pass_to_next_i = False
                                             for e in ["atk_btn", "obj_btn", "poke_btn", "leave_btn"]:
                                                 self.__ui.pop(e)
+                                            self.__ui["return_btn"] = GuiLib.ReturnBtn("return_btn", 58, 75)
                                             self.__where_i_am = "game-choose-poke"
                                         case "leave_btn":
                                             pass_to_next_i = False
@@ -125,6 +127,26 @@ class Game:
                                             if e in list(self.__ui.keys()):
                                                 self.__ui.pop(e)
                                         self.__where_i_am = "game-action"
+                                case "game-choose-obj":
+                                    if uie.id == "return_btn":
+                                        self.__ui.pop("return_btn")
+                                        self.__ui = self.__ui | {
+                                            "atk_btn": GuiLib.Btn("atk_btn", 3, 58, 60, 20, "Attaquer", 7),
+                                            "obj_btn": GuiLib.Btn("obj_btn", 65, 58, 60, 20, "Objets", 7),
+                                            "poke_btn": GuiLib.Btn("poke_btn", 3, 80, 60, 20, "Pokemon", 7),
+                                            "leave_btn": GuiLib.Btn("leave_btn", 65, 80, 60, 20, "Fuir", 7),
+                                        }
+                                        self.__where_i_am = "game-choose-action"
+                                case "game-choose-poke":
+                                    if uie.id == "return_btn":
+                                        self.__ui.pop("return_btn")
+                                        self.__ui = self.__ui | {
+                                            "atk_btn": GuiLib.Btn("atk_btn", 3, 58, 60, 20, "Attaquer", 7),
+                                            "obj_btn": GuiLib.Btn("obj_btn", 65, 58, 60, 20, "Objets", 7),
+                                            "poke_btn": GuiLib.Btn("poke_btn", 3, 80, 60, 20, "Pokemon", 7),
+                                            "leave_btn": GuiLib.Btn("leave_btn", 65, 80, 60, 20, "Fuir", 7),
+                                        }
+                                        self.__where_i_am = "game-choose-action"
                                 case _:
                                     print(f"idk where i am\nHere the data:{self.__where_i_am},{uie}")
                             # print(f'{uie.id} has been clicked')

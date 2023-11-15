@@ -274,11 +274,19 @@ class GuiLib:
 
     class ReturnBtn(Btn):
         def __init__(self, id: str, x: int, y: int) -> None:
-            super().__init__(id, x, y, 8, 8, "", 7)
+            super().__init__(id, x, y, 12, 12, "", 7)
 
         def draw(self):
             super().draw()
-            pyxel.rect(self.get_x() + 2, self.get_y() + 2, 4, 1, 7)
+            pyxel.rect(self.get_x() + 4, self.get_y() + 2, 5, 1, 7)
+            pyxel.rect(self.get_x() + 9, self.get_y() + 3, 1, 4, 7)
+            pyxel.rect(self.get_x() + 2, self.get_y() + 7, 7, 1, 7)
+            pyxel.rect(self.get_x() + 3, self.get_y() + 6, 1, 3, 7)
+            pyxel.rect(self.get_x() + 4, self.get_y() + 5, 1, 5, 7)
+            return
+
+        def update(self):
+            return super().update()
 
     class Txt:
         def __init__(self, x: int, y: int, txt: str, col: int) -> None:
