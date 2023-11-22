@@ -67,7 +67,9 @@ class Game:
                     }
                 else:
                     self.__where_i_am = "game-end"
-                    txt_end = [f"{self.__player_not_playing.get_name()} est mort", f"Joueur {'1' if self.__p1.get_poke_out() == self.__player_playing else '2'} a gagne"]
+                    player_dead = self.__p1 if self.__p1.get_poke_out().is_dead() else self.__p2
+                    player_alive = self.__p1 if self.__p1.get_poke_out().is_alive() else self.__p2
+                    txt_end = [f"{player_dead.get_poke_out().get_name()} est mort", f"{player_alive.name} a gagne"]
                     self.__ui = self.__ui | {
                         "msg1-end": GuiLib.Txt((128 - (len(txt_end[0]) * 4)) // 2, 75, txt_end[0], 7),
                         "msg2-end": GuiLib.Txt((128 - (len(txt_end[1]) * 4)) // 2, 82, txt_end[1], 7),
